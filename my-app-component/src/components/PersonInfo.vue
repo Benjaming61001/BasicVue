@@ -4,22 +4,10 @@
 			<h1>{{ name }}</h1>
 		</template>
 
-		<template v-slot:card-button>
-			<button @click="showDescription(id)">
-				{{ isVisible ? "Hide " : "Show " }}Details
-			</button>
-			&nbsp;
-			<button @click="deleteEmployee(id)">Delete</button>
-		</template>
-
 		<template v-slot:card-content>
-			<transition name="fade">
-				<div v-show="isVisible">
-					<p>
-						Salary: {{ salary }} Baht | Department: {{ department }}
-					</p>
-				</div>
-			</transition>
+			<p>Gender: {{ gender }} | Salary: {{ salary }} Baht</p>
+			<p>Department: {{ department }}</p>
+			<p>Language skill(s): {{ skill }}</p>
 		</template>
 	</CardPrototype>
 </template>
@@ -32,9 +20,6 @@ export default {
 		CardPrototype,
 	},
 	props: {
-		id: {
-			type: Number,
-		},
 		name: {
 			type: String,
 			required: true,
@@ -47,16 +32,11 @@ export default {
 			type: String,
 			required: true,
 		},
-		isVisible: {
-			type: Boolean,
+		gender: {
+			type: String,
 		},
-	},
-	methods: {
-		showDescription(id) {
-			this.$emit("show", id);
-		},
-		deleteEmployee(id) {
-			this.$emit("delete", id);
+		skill: {
+			type: Array,
 		},
 	},
 };
