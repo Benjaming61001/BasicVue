@@ -22,8 +22,11 @@
 					</div>
 				</div>
 
-				<div class="col-md-8">
-					<h4>Cart</h4>
+				<div class="col-md-8" v-if="inCart != 0">
+					<h4>
+						<i class="fa fa-shopping-cart"></i>
+						Cart
+					</h4>
 					<hr />
 					<table class="table">
 						<thead class="thead-dark">
@@ -48,17 +51,29 @@
 								<td>{{ product.name }}</td>
 								<td>{{ product.price }}</td>
 								<td>
-									<i class="fa fa-minus qty-minus"></i>
+									<i
+										class="fa fa-minus qty-minus"
+										@click="minusQty(product)"
+									></i>
 									{{ product.qty }}
-									<i class="fa fa-plus qty-plus"></i>
+									<i
+										class="fa fa-plus qty-plus"
+										@click="plusQty(product)"
+									></i>
 								</td>
 								<td>{{ product.total }}</td>
 								<td>
-									<button>Remove</button>
+									<button
+										@click="removeProduct(product)"
+										class="btn-danger"
+									>
+										<i class="fa fa-trash"></i>
+									</button>
 								</td>
 							</tr>
 						</tbody>
 					</table>
+					<h4 align="right">Total: {{ total() }} Baht</h4>
 				</div>
 			</div>
 		</div>
@@ -73,6 +88,7 @@ export default {
 			inCart: [],
 			coffee: 0,
 			tea: 0,
+			caramel: 0,
 			products: [
 				{
 					id: 1,
@@ -103,23 +119,24 @@ export default {
 		addToCart: function (item) {
 			if (item.id == 1) {
 				this.coffee += 1;
-				if (this.coffee < 1) {
+				if (this.coffee <= 1) {
 					this.pushData(item);
 				} else {
-					var found = this.findIndex(item);
-					this.inCart[found].qty += 1;
-					this.inCart[found].total =
-						this.inCart[found].qty * this.inCart[found].price;
+					this.toCart(item);
+				}
+			} else if (item.id == 2) {
+				this.tea += 1;
+				if (this.tea <= 1) {
+					this.pushData(item);
+				} else {
+					this.toCart(item);
 				}
 			} else {
-				this.tea += 1;
-				if (this.tea < 1) {
+				this.caramel += 1;
+				if (this.caramel <= 1) {
 					this.pushData(item);
 				} else {
-					found = this.findIndex(item);
-					this.inCart[found].qty += 1;
-					this.inCart[found].total =
-						this.inCart[found].qty * this.inCart[found].price;
+					this.toCart(item);
 				}
 			}
 		},
@@ -138,8 +155,46 @@ export default {
 				if (this.inCart[i].id == item.id) {
 					return i;
 				}
-				return -1;
 			}
+			return -1;
+		},
+		toCart: function (item) {
+			var found = this.findIndex(item);
+			this.inCart[found].qty += 1;
+			this.inCart[found].total =
+				this.inCart[found].qty * this.inCart[found].price;
+		},
+		minusQty: function (product) {
+			product.qty -= 1;
+			if (product.qty <= 1) {
+				product.qty = 1;
+			}
+			product.total = product.price * product.qty;
+		},
+		plusQty: function (product) {
+			product.qty += 1;
+
+			product.total = product.price * product.qty;
+		},
+		removeProduct(product) {
+			if (confirm("Are you sure?")) {
+				var index = this.inCart.indexOf(product);
+				this.inCart.splice(index, 1);
+				if (product.id == 1) {
+					this.coffee = 0;
+				} else if (product.id == 2) {
+					this.tea = 0;
+				} else {
+					this.caramel = 0;
+				}
+			}
+		},
+		total: function () {
+			var sum = 0;
+			this.inCart.forEach(function (item) {
+				sum += item.total;
+			});
+			return sum;
 		},
 	},
 };
