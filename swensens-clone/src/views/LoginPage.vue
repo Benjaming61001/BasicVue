@@ -15,41 +15,24 @@
 				<div class="form">
 					<div class="form-item">
 						<label for="">อีเมล</label>
-						<input
-							type="text"
-							placeholder="กรอกอีเมล"
-							v-model="user.email"
-						/>
+						<input type="text" placeholder="กรอกอีเมล" v-model="user.email" />
 					</div>
 
 					<div class="form-item">
 						<label for="">รหัสผ่าน</label>
-						<input
-							type="password"
-							placeholder="กรอกรหัสผ่าน"
-							v-model="user.password"
-						/>
+						<input type="password" placeholder="กรอกรหัสผ่าน" v-model="user.password" />
 						<p>ลืมรหัสผ่าน</p>
 					</div>
 
 					<div class="form-item">
 						<div class="submit" v-if="accept == true">
-							<button
-								@click="login"
-								id="submitBtn"
-								ref="submitBtn"
-								class="accept"
-							>
+							<button @click="login" id="submitBtn" ref="submitBtn" class="accept">
 								<span>เข้าสู่ระบบ</span>
 							</button>
 						</div>
 
 						<div class="submit" v-else>
-							<button
-								id="submitBtn"
-								ref="submitBtn"
-								class="reject"
-							>
+							<button id="submitBtn" ref="submitBtn" class="reject">
 								<span>เข้าสู่ระบบ</span>
 							</button>
 						</div>
@@ -92,11 +75,39 @@ export default {
 				alert("Invalid data");
 				return;
 			}
+			let displayName = this.checkUser();
 
-			let loginName = this.user.email;
-			alert("Register completed");
-			this.$emit("login", loginName);
+			this.$emit("login", displayName);
 		},
+
+		findIndex: function (item) {
+			for (var i = 0; i < this.userList.length; i++) {
+				if (this.userList[i].email == item) {
+					return i;
+				}
+			}
+			return -1;
+		},
+		checkUser: function () {
+			let found = this.findIndex(this.user.email);
+			if (found == -1) {
+				alert("User not found")
+				return;
+			}
+
+			if (!this.checkPass(found)) {
+				alert("Password incorrect")
+				return
+			}
+			let loginName = this.userList[found].firstName;
+			return loginName
+		},
+		checkPass: function (found) {
+			if (this.userList[found].password == this.user.password) {
+				return true
+			}
+			return false
+		}
 	},
 	watch: {
 		user: {

@@ -1,12 +1,7 @@
 <template>
 	<section>
-		<TopBar class="shadow topbar" :loginUser="loginUser" />
-		<router-view
-			class="body"
-			@save="insertUser"
-			@login="login"
-			:userList="user"
-		></router-view>
+		<TopBar class="shadow topbar" @logout="logout" :loginUser="loginUser" />
+		<router-view class="body" @save="insertUser" @login="login" :userList="userList"></router-view>
 		<bottom-bar />
 	</section>
 </template>
@@ -26,16 +21,48 @@ export default {
 			loginUser: {
 				name: "",
 			},
-			user: [],
+			userList: [
+				{
+					firstName: "Pavin",
+					lastName: "Butprom",
+					tel: "0928253828",
+					email: "pavin5356@gmail.com",
+					password: "1",
+					gender: "male",
+					birthday: "21/09/2542",
+				},
+				{
+					firstName: "Pariya",
+					lastName: "Buphamatanang",
+					tel: "0928253828",
+					email: "Jean.sty@gmail.com",
+					password: "12345678",
+					gender: "female",
+					birthday: "31/08/2542",
+				},
+
+				{
+					firstName: "ex",
+					lastName: "ample",
+					tel: "0123456789",
+					email: "mail",
+					password: "pass",
+					gender: "none",
+					birthday: "00/00/0000",
+				},
+			],
 		};
 	},
 	methods: {
 		insertUser(data) {
-			this.user.push(data);
+			this.userList.push(data);
 		},
 		login(data) {
 			this.loginUser.name = data;
 		},
+		logout(data) {
+			this.loginUser.name = data;
+		}
 	},
 };
 </script>
@@ -66,6 +93,7 @@ section {
 .shadow {
 	box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
 }
+
 .topbar {
 	z-index: 3;
 }
